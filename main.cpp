@@ -8,7 +8,7 @@
 
 int main() {
     Player player;
-    Farm farm(7, 8, &player);
+    Farm farm(5, 6, &player);
     FarmPrinter printer(&farm);
     bool game_in_progress = true;
     std::string player_input;
@@ -31,6 +31,10 @@ int main() {
         } else if(player_input == "c") {
             Carrot *carrot = new Carrot();
             farm.plant(player.row(), player.column(), carrot);
+        } else if (player_input == "h") {
+            farm.harvest(player.row(), player.column());
+        } else if (player_input == "e") {
+            farm.end_day();
         }
     }
 }
