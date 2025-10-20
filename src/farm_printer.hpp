@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include "farm.hpp"
 
 class FarmPrinter {
 private:
