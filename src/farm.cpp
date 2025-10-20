@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "farm.hpp"
+#include "carrot.hpp"
 #include "soil.hpp"
 
 Farm::Farm(int rows, int columns, Player *player) : rows(rows), columns(columns), player(player) {
@@ -15,13 +16,10 @@ Farm::Farm(int rows, int columns, Player *player) : rows(rows), columns(columns)
   }
 }
 
-int Farm::number_of_rows() {
-  return rows;
-}
 
-int Farm::number_of_columns() {
-  return columns;
-}
+int Farm::number_of_rows() { return rows; }
+int Farm::number_of_columns() { return columns; }
+int Farm::day() const { return current_day; }
 
 std::string Farm::get_symbol(int row, int column) {
   if(player->row() == row && player->column() == column) {
@@ -32,7 +30,26 @@ std::string Farm::get_symbol(int row, int column) {
 }
 
 void Farm::plant(int row, int column, Plot *plot) {
-  Plot *current_plot = plots.at(row).at(column);
-  plots.at(row).at(column) = plot;
-  delete current_plot;
+  //cannot plant on non-soil
+  if (dynamic_cast<Soil*>(plots.at(row).at(column)) == nullptr)
+    return;
+    delete plots.at(row).at(column);
+    plots.at(row).at(column) = plot;
+  }
+
+void Farm::harvest(int row, int column) {
+  Carrot *carrot = dynamic_cast<Carrot*>(plots.at(row).at(column));
+  if (carrot && carrot->is_mature()) {
+    delete plots.at(row).at(column);
+    plots.at(row).at(column) = new Soil();
+  }
+}
+
+void Farm::end_day() {
+  current_day++;
+  for (auto& row : plots) {
+    for (auto& plot : row) {
+      plot->end_day();
+    }
+  }
 }
