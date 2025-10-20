@@ -5,22 +5,40 @@
 
 #include "../src/player.hpp"
 
-TEST_CASE( "it starts the player in row zero, column zero" ) {
+TEST_CASE( "Player starts in row zero, col zero") {
     Player player;
-    REQUIRE( player.row() == 0 );
-    REQUIRE( player.column() == 0 );
+    REQUIRE ( player.row() == 0 );
+    REQUIRE ( player.column() == 0 );
 }
 
 TEST_CASE( "it moves the player to the right" ) {
     Player player;
-    player.move_right();
+    int max_col = 5;
+    player.move_right(max_col);
     REQUIRE( player.row() == 0 );
     REQUIRE( player.column() == 1 );
 }
 
-TEST_CASE( "it moves the player down" ) {
+TEST_CASE( " it moves the player to the left, testing bound" ) {
     Player player;
-    player.move_down();
+    int min_col = 5;
+    player.move_left(min_col);
+    REQUIRE( player.row() == 0 );
+    REQUIRE( player.column() == 0 );
+}
+
+TEST_CASE( " it moves the player up, testing bound" ) {
+    Player player;
+    int min_row = 5;
+    player.move_up(min_row);
+    REQUIRE( player.row() == 0 );
+    REQUIRE( player.column() == 0 );
+}
+
+TEST_CASE( " it moves the player down" ) {
+    Player player;
+    int max_row = 5;
+    player.move_down(max_row);
     REQUIRE( player.row() == 1 );
     REQUIRE( player.column() == 0 );
 }
