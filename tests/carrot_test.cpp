@@ -5,7 +5,12 @@
 
 #include "../src/carrot.hpp"
 
-TEST_CASE( "it returns a v as its when it is a seedling" ) {
+TEST_CASE( "it returns a v when it is a seedling" ) {
     Carrot carrot;
     REQUIRE( carrot.symbol() == "v" );
 }
+
+// TEST_CASE ( "it returns as V when it is mature") {
+//     Carrot carrot;
+//     REQUIRE( carrot.is_mature() == "V" );
+// }
