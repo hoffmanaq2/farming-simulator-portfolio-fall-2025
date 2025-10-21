@@ -16,6 +16,14 @@ Farm::Farm(int rows, int columns, Player *player) : rows(rows), columns(columns)
   }
 }
 
+Farm::~Farm() {
+  for (auto& row : plots) {
+    for (auto& plot : row) {
+      delete plot;
+    }
+  }
+}
+
 
 int Farm::number_of_rows() { return rows; }
 int Farm::number_of_columns() { return columns; }
@@ -24,8 +32,7 @@ int Farm::day() const { return current_day; }
 std::string Farm::get_symbol(int row, int column) {
   if(player->row() == row && player->column() == column) {
     return "@";
-  } else {
-    return plots.at(row).at(column)->symbol();
+    return plots.at(row).at(column)->symbol(); //not needed?
   }
 }
 
@@ -46,7 +53,6 @@ void Farm::harvest(int row, int column) {
 }
 
 void Farm::end_day() {
-  current_day++;
   for (auto& row : plots) {
     for (auto& plot : row) {
       plot->end_day();

@@ -16,6 +16,7 @@ private:
 
 public:
     Farm(int rows, int columns, Player *player);
+    ~Farm();
 
     int number_of_rows();
     int number_of_columns();
