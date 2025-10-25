@@ -1,11 +1,8 @@
 #include <iostream>
-
-#include "cmake-build-debug/_deps/catch2-src/src/catch2/internal/catch_stdstreams.hpp"
 #include "src/player.hpp"
 #include "src/farm.hpp"
 #include "src/farm_printer.hpp"
 #include "src/carrot.hpp"
-//#include "src/ansi_clear.hpp"
 
 int main() {
     Player player;
