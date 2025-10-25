@@ -5,7 +5,13 @@
 
 #include "../src/soil.hpp"
 
-TEST_CASE( "it returns a dot as its symbol" ) {
+TEST_CASE("Soil returns a dot as its symbol") {
     Soil soil;
     REQUIRE( soil.symbol() == "." );
+}
+
+TEST_CASE("Soil end_day does nothing") {
+    Soil soil;
+    soil.end_day(); // Should not throw or change state
+    REQUIRE(soil.symbol() == ".");
 }

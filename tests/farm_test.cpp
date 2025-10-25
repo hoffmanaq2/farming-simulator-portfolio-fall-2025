@@ -7,51 +7,48 @@
 #include "../src/farm.hpp"
 #include "../src/carrot.hpp"
 
-TEST_CASE( "it can be initialized with a single plot" ) {
+
+TEST_CASE("Farm initializes correctly with soil plots") {
     Player player;
-    Farm farm(1, 1, &player);
-    REQUIRE( farm.number_of_rows() == 1 );
-    REQUIRE( farm.number_of_columns() == 1 );
+    Farm farm(3, 4, &player);
+
+    REQUIRE(farm.number_of_rows() == 3);
+    REQUIRE(farm.number_of_columns() == 4);
+    REQUIRE(farm.day() == 1);
+
+    // All plots should be soil initially
+    REQUIRE(farm.get_symbol(0, 0) == "@"); // Player start
+    REQUIRE(farm.get_symbol(0, 1) == ".");
+    REQUIRE(farm.get_symbol(1, 0) == ".");
 }
 
-TEST_CASE( "it can be initialized as a 1x2 farm" ) {
+TEST_CASE("Planting and harvesting carrots") {
     Player player;
-    Farm farm(1, 2, &player);
-    REQUIRE( farm.number_of_rows() == 1 );
-    REQUIRE( farm.number_of_columns() == 2 );
+    Farm farm(3, 3, &player);
+
+    // Plant carrot at player's position
+    farm.plant(player.row(), player.column(), new Carrot());
+    REQUIRE(farm.get_symbol(0, 0) == "@"); // player symbol overlays
+    farm.end_day(); // Grow carrot
+
+    // Move off plot to see carrot symbol
+    player.move_right(farm.number_of_columns());
+    REQUIRE(farm.get_symbol(0, 0) == "V"); // mature carrot visible
+
+    // Harvest mature carrot
+    farm.harvest(0, 0);
+    REQUIRE(farm.get_symbol(0, 0) == ".");
 }
 
-TEST_CASE( "it can be initialized as a 2x1 farm" ) {
+TEST_CASE("End of day increments and matures plants") {
     Player player;
-    Farm farm(2, 1, &player);
-    REQUIRE( farm.number_of_rows() == 2 );
-    REQUIRE( farm.number_of_columns() == 1 );
+    Farm farm(2, 2, &player);
+
+    farm.plant(0, 1, new Carrot());
+    REQUIRE(farm.day() == 1);
+    REQUIRE(farm.get_symbol(0, 1) == "v");
+
+    farm.end_day();
+    REQUIRE(farm.day() == 2);
+    REQUIRE(farm.get_symbol(0, 1) == "V");
 }
-
-TEST_CASE( "it returns the symbol for a single soil plot" ) {
-    Player player;
-    Farm farm(1, 1, &player);
-    REQUIRE( farm.get_symbol(0, 0) == "@" );
-}
-
-TEST_CASE( "it returns the symbols for a 1x2 farm" ) {
-    Player player;
-    Farm farm(1, 2, &player);
-    REQUIRE( farm.get_symbol(0, 0) == "@" );
-    REQUIRE( farm.get_symbol(0, 1) == "." );
-}
-
-// TEST_CASE( "it returns the symbols for a 2x1 farm" ) {
-//     Player player;
-//     Farm farm(2, 1, &player);
-//     REQUIRE( farm.get_symbol(0, 0) == "@" );
-//     REQUIRE( farm.get_symbol(1, 0) == "." );
-// }
-
-// TEST_CASE( "it allows us to plant a carrot" ) {
-//     Player player;
-//     Farm farm(1, 2, &player);
-//     Carrot *carrot = new Carrot();
-//     farm.plant(0, 1, carrot);
-//     REQUIRE( farm.get_symbol(0, 1) == "v" );
-// }

@@ -7,30 +7,22 @@
 #include "../src/farm.hpp"
 #include "../src/farm_printer.hpp"
 
-TEST_CASE( "it pretty prints a single plot of land" ) {
-    Player player;
-    Farm farm(1, 1, &player);
-    FarmPrinter printer(&farm);
-    REQUIRE( printer.pp() == "@ \n" );
-}
 
-TEST_CASE( "it pretty prints a 1x2 farm" ) {
-    Player player;
-    Farm farm(1, 2, &player);
-    FarmPrinter printer(&farm);
-    REQUIRE( printer.pp() == "@ . \n" );
-}
-
-TEST_CASE( "it pretty prints a 2x1 farm" ) {
-    Player player;
-    Farm farm(2, 1, &player);
-    FarmPrinter printer(&farm);
-    REQUIRE( printer.pp() == "@ \n. \n" );
-}
-
-TEST_CASE( "it pretty prints a 2x2 farm" ) {
+TEST_CASE("FarmPrinter prints expected farm layout (2x2) and legend") {
     Player player;
     Farm farm(2, 2, &player);
     FarmPrinter printer(&farm);
-    REQUIRE( printer.pp() == "@ . \n. . \n" );
+
+    std::string expected;
+    expected += "Legend:      @=Player     .=Soil      v=Baby Carrot       V=Mature Carrot\n\n";
+    expected += "Controls:    w=up   s=down   a=left   d=right   c=plant   h=harvest   e=end day   q=quit\n\n";
+    expected += "Day " + std::to_string(farm.day()) + "\n";
+
+    // Farm grid (2 rows, 2 columns)
+    expected += "@ . \n";
+    expected += ". . \n";
+
+    REQUIRE(printer.pp() == expected);
 }
+//Next portfolio - will want to add "L" to display legend, and not legend on screen entire time
+//With legend on screen, makes it difficult to write clear tests

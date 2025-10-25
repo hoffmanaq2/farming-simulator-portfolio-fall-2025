@@ -5,40 +5,39 @@
 
 #include "../src/player.hpp"
 
-TEST_CASE( "Player starts in row zero, col zero") {
-    Player player;
-    REQUIRE ( player.row() == 0 );
-    REQUIRE ( player.column() == 0 );
+TEST_CASE("Player starts at 0,0") {
+    Player p;
+    REQUIRE(p.row() == 0);
+    REQUIRE(p.column() == 0);
 }
 
-TEST_CASE( "it moves the player to the right" ) {
-    Player player;
-    int max_col = 5;
-    player.move_right(max_col);
-    REQUIRE( player.row() == 0 );
-    REQUIRE( player.column() == 1 );
-}
+TEST_CASE("Player movement within farm boundaries") {
+    Player p;
 
-TEST_CASE( " it moves the player to the left, testing bound" ) {
-    Player player;
-    int min_col = 5;
-    player.move_left(min_col);
-    REQUIRE( player.row() == 0 );
-    REQUIRE( player.column() == 0 );
-}
+    SECTION("Move right within boundary") {
+        p.move_right(5);
+        REQUIRE(p.column() == 1);
+    }
 
-TEST_CASE( " it moves the player up, testing bound" ) {
-    Player player;
-    int min_row = 5;
-    player.move_up(min_row);
-    REQUIRE( player.row() == 0 );
-    REQUIRE( player.column() == 0 );
-}
+    SECTION("Move down within boundary") {
+        p.move_down(5);
+        REQUIRE(p.row() == 1);
+    }
 
-TEST_CASE( " it moves the player down" ) {
-    Player player;
-    int max_row = 5;
-    player.move_down(max_row);
-    REQUIRE( player.row() == 1 );
-    REQUIRE( player.column() == 0 );
+    SECTION("Cannot move left past boundary") {
+        p.move_left();
+        REQUIRE(p.column() == 0);
+    }
+
+    SECTION("Cannot move up past boundary") {
+        p.move_up();
+        REQUIRE(p.row() == 0);
+    }
+
+    SECTION("Stops at max boundaries") {
+        for (int i = 0; i < 10; i++) p.move_right(3);
+        for (int i = 0; i < 10; i++) p.move_down(3);
+        REQUIRE(p.row() == 2);
+        REQUIRE(p.column() == 2);
+    }
 }

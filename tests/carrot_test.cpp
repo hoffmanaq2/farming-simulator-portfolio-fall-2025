@@ -5,12 +5,23 @@
 
 #include "../src/carrot.hpp"
 
-TEST_CASE( "it returns a v when it is a seedling" ) {
+TEST_CASE ("Carrot returns a v when it is a seedling") {
     Carrot carrot;
     REQUIRE( carrot.symbol() == "v" );
+    REQUIRE_FALSE(carrot.is_mature());
 }
 
-// TEST_CASE ( "it returns as V when it is mature") {
-//     Carrot carrot;
-//     REQUIRE( carrot.is_mature() == "V" );
-// }
+TEST_CASE ( "Carrot matures after one day") {
+    Carrot carrot;
+    carrot.end_day();
+    REQUIRE(carrot.symbol() == "V");
+    REQUIRE(carrot.is_mature());
+}
+
+TEST_CASE ( "Carrot does not change after maturity") {
+    Carrot carrot;
+    carrot.end_day();
+    carrot.end_day();
+    REQUIRE(carrot.symbol() == "V");
+    REQUIRE(carrot.is_mature());
+}
