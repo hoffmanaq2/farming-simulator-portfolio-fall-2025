@@ -16,14 +16,13 @@ Farm::Farm(int rows, int columns, Player *player) : rows(rows), columns(columns)
   }
 }
 
-// Farm::~Farm() {
-//   for (auto& row : plots) {
-//     for (auto& plot : row) {
-//       delete plot;
-//     }
-//   }
-// }
-
+Farm::~Farm() {
+  for (std::vector<Plot*>& row : plots) {
+    for (Plot* plot : row) {
+      delete plot;
+    }
+  }
+}
 
 int Farm::number_of_rows() { return rows; }
 int Farm::number_of_columns() { return columns; }
@@ -54,8 +53,9 @@ void Farm::harvest(int row, int column) {
 }
 
 void Farm::end_day() {
-  for (auto& row : plots) {
-    for (auto& plot : row) {
+  current_day++;
+  for (std::vector<Plot*>& row : plots) {
+    for (Plot* plot : row) {
       plot->end_day();
     }
   }
