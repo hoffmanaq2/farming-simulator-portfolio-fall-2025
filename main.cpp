@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "cmake-build-debug/_deps/catch2-src/src/catch2/internal/catch_stdstreams.hpp"
 #include "src/player.hpp"
 #include "src/farm.hpp"
 #include "src/farm_printer.hpp"
@@ -20,6 +21,7 @@ int main() {
 
         if(player_input == "q") {
             game_in_progress = false;
+            std::cout << "Thanks for playing!\n";
         } else if (player_input == "w") {
             player.move_up();
         } else if (player_input == "s") {
