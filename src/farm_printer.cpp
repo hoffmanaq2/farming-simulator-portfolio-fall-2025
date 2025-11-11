@@ -6,8 +6,10 @@ FarmPrinter::FarmPrinter(Farm* farm) : farm(farm) {}
 
 std::string FarmPrinter::pp() {
 
-    std::string output = "Legend:      @=Player     .=Soil      v=Baby Carrot       V=Mature Carrot\n\n";
-    output += "Controls:    w=up   s=down   a=left   d=right   c=plant   h=harvest   e=end day   q=quit\n\n"; //3 spaces
+    std::string output = "Legend:      @=Player     .=Soil     x=Seed/tilled     v/V=Carrot (v=seedling, V=mature)\n";
+    output += "             o/O=Lettuce     s/S=Spinach     u/U=Beet     b/B=Brussels Sprouts\n\n";
+    output += "Controls:    w=up   s=down   a=left   d=right   1=plant carrot   2=plant lettuce   3=plant spinach\n";
+    output += "             4=plant beet   5=plant brussels   t=water   h=harvest   e=end day   q=quit\n\n";
     output += "Day " + std::to_string(farm->day()) + "\n";
 
     for (int i = 0; i < farm->number_of_rows(); i++) {
