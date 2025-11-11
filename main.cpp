@@ -1,8 +1,13 @@
 #include <iostream>
+
+#include "src/beet.hpp"
+#include "src/brussels_sprouts.hpp"
 #include "src/player.hpp"
 #include "src/farm.hpp"
 #include "src/farm_printer.hpp"
 #include "src/carrot.hpp"
+#include "src/lettuce.hpp"
+#include "src/spinach.hpp"
 
 int main() {
     Player player;
@@ -27,9 +32,23 @@ int main() {
             player.move_left();
         } else if (player_input == "d") {
             player.move_right(farm.number_of_columns());
-        } else if(player_input == "c") {
+        } else if(player_input == "1") {
             Carrot *carrot = new Carrot();
             farm.plant(player.row(), player.column(), carrot);
+        } else if (player_input == "2") {
+            Lettuce *lettuce = new Lettuce();
+            farm.plant(player.row(), player.column(), lettuce);
+        } else if (player_input == "3") {
+            Spinach *spinach = new Spinach();
+            farm.plant(player.row(), player.column(), spinach);
+        } else if (player_input == "4") {
+            Beet *beet = new Beet();
+            farm.plant(player.row(), player.column(), beet);
+        } else if (player_input == "5") {
+            BrusselsSprouts *brussels = new BrusselsSprouts();
+            farm.plant(player.row(), player.column(), brussels);
+        } else if(player_input == "t") {
+            farm.water(player.row(), player.column());
         } else if (player_input == "h") {
             farm.harvest(player.row(), player.column());
         } else if (player_input == "e") {
