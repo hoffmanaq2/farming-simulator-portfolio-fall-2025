@@ -49,14 +49,6 @@ void Farm::plant(int row, int column, Plot *plot) {
     plots.at(row).at(column) = plot;
   }
 
-// void Farm::harvest(int row, int column) {
-//   Carrot *carrot = dynamic_cast<Carrot*>(plots.at(row).at(column));
-//   if (carrot && carrot->is_mature()) {
-//     delete plots.at(row).at(column);
-//     plots.at(row).at(column) = new Soil();
-//   }
-// }
-
 void Farm::harvest(int row, int column) {
   if (plots.at(row).at(column)->is_mature()) {
     delete plots.at(row).at(column);
