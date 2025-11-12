@@ -14,8 +14,10 @@ TEST_CASE("FarmPrinter prints expected farm layout (2x2) and legend") {
     FarmPrinter printer(&farm);
 
     std::string expected;
-    expected += "Legend:      @=Player     .=Soil      v=Baby Carrot       V=Mature Carrot\n\n";
-    expected += "Controls:    w=up   s=down   a=left   d=right   c=plant   h=harvest   e=end day   q=quit\n\n";
+    expected += "Legend:      @=Player     .=Soil     x=Seed/tilled     v/V=Carrot (v=seedling, V=mature)\n";
+    expected += "             o/O=Lettuce     s/S=Spinach     u/U=Beet     b/B=Brussels Sprouts\n\n";
+    expected += "Controls:    w=up   s=down   a=left   d=right   1=plant carrot   2=plant lettuce   3=plant spinach\n";
+    expected += "             4=plant beet   5=plant brussels   t=water   h=harvest   e=end day   q=quit\n\n";
     expected += "Day " + std::to_string(farm.day()) + "\n";
 
     // Farm grid (2 rows, 2 columns)
