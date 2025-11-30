@@ -5,6 +5,7 @@
 
 #include "plot.hpp"
 #include "player.hpp"
+#include "bunny.hpp"
 
 class Farm {
 private:
@@ -13,6 +14,8 @@ private:
     int current_day = 1;
     Player *player;
     std::vector<std::vector<Plot*>> plots;
+
+    Bunny *bunny = nullptr;
 
 public:
     Farm(int rows, int columns, Player *player);
@@ -27,4 +30,9 @@ public:
     void harvest(int row, int column);
     void water(int row, int column);
     void end_day();
+
+    void maybe_spawn_bunny();
+    void bunny_eat_if_plant();
+    void bunny_check_fear();
+    void bunny_move();
 };
