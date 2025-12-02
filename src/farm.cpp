@@ -9,7 +9,6 @@
 #include "spinach.hpp"
 #include "beet.hpp"
 #include "brussels_sprouts.hpp"
-//#include "water.hpp"
 #include "soil.hpp"
 
 Farm::Farm(int rows, int columns, Player *player) : rows(rows), columns(columns), player(player) {
