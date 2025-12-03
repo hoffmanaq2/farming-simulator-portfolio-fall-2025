@@ -11,7 +11,7 @@
 
 int main() {
     Player player;
-    Farm farm(5, 6, &player);
+    Farm farm(7, 9, &player);
     FarmPrinter printer(&farm);
     bool game_in_progress = true;
     std::string player_input;
