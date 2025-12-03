@@ -16,9 +16,10 @@ private:
     std::vector<std::vector<Plot*>> plots;
 
     Bunny *bunny = nullptr;
+    bool bunnies_enabled = true;
 
 public:
-    Farm(int rows, int columns, Player *player);
+    Farm(int rows, int columns, Player *player,  bool enable_bunnies = true);
     ~Farm();
 
     int number_of_rows();
@@ -35,4 +36,8 @@ public:
     void bunny_eat_if_plant();
     void bunny_check_fear();
     void bunny_move();
+
+    // // for tests
+    // Bunny* get_bunny() const;
+    // void set_bunny(Bunny* b);
 };

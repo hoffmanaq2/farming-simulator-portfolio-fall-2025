@@ -11,7 +11,7 @@
 #include "brussels_sprouts.hpp"
 #include "soil.hpp"
 
-Farm::Farm(int rows, int columns, Player *player) : rows(rows), columns(columns), player(player) {
+Farm::Farm(int rows, int columns, Player *player, bool enable_bunnies) : rows(rows), columns(columns), player(player), bunnies_enabled(enable_bunnies) {
   for(int i = 0; i < rows; i++) {
     std::vector<Plot *> row;
     for(int j = 0; j < columns; j++) {
@@ -37,18 +37,10 @@ int Farm::number_of_rows() { return rows; }
 int Farm::number_of_columns() { return columns; }
 int Farm::day() const { return current_day; }
 
-// std::string Farm::get_symbol(int row, int column) {
-//   if(player->row() == row && player->column() == column) {
-//     return "@";
-//   } else {
-//     return plots.at(row).at(column)->symbol(); //not needed?
-//   }
-// }
-
 std::string Farm::get_symbol(int row, int column) {
   if (player->row() == row && player->column() == column)
     return "@";
-  if (bunny != nullptr && bunny->row() == row && bunny->column() == column)
+  if (bunnies_enabled && bunny != nullptr && bunny->row() == row && bunny->column() == column)
     return "R";
   return plots.at(row).at(column)->symbol();
 }
@@ -75,6 +67,10 @@ void Farm::water(int row, int column) {
 
 // BUNNY LOGIC
 void Farm::maybe_spawn_bunny() {
+  // if (bunny != nullptr)
+  //   return;
+  if (!bunnies_enabled)
+    return;
   if (bunny != nullptr)
     return;
 
@@ -164,8 +160,21 @@ void Farm::end_day() {
       plot->end_day();
     }
   }
-  bunny_eat_if_plant();
-  bunny_check_fear();
-  bunny_move();
-  maybe_spawn_bunny();
+
+  if (bunnies_enabled) {
+    bunny_eat_if_plant();
+    bunny_check_fear();
+    bunny_move();
+    maybe_spawn_bunny();
+  }
 }
+
+// Bunny* Farm::get_bunny() const {
+//   return bunny;
+// }
+//
+// void Farm::set_bunny(Bunny* b) {
+//   if (bunny != nullptr)
+//     delete bunny;     // avoid memory leaks replacing an existing one
+//   bunny = b;
+// }
