@@ -169,12 +169,12 @@ void Farm::end_day() {
   }
 }
 
-// Bunny* Farm::get_bunny() const {
-//   return bunny;
-// }
-//
-// void Farm::set_bunny(Bunny* b) {
-//   if (bunny != nullptr)
-//     delete bunny;     // avoid memory leaks replacing an existing one
-//   bunny = b;
-// }
+Bunny* Farm::get_bunny() const {
+  return bunny;
+}
+
+void Farm::set_bunny(Bunny* b) {
+  if (bunny != nullptr)
+    delete bunny;     // avoid memory leaks replacing an existing one
+  bunny = b;
+}

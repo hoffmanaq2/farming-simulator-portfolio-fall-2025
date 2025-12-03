@@ -37,7 +37,7 @@ public:
     void bunny_check_fear();
     void bunny_move();
 
-    // // for tests
-    // Bunny* get_bunny() const;
-    // void set_bunny(Bunny* b);
+    // for tests
+    Bunny* get_bunny() const;
+    void set_bunny(Bunny* b);
 };
