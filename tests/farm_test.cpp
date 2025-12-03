@@ -167,80 +167,125 @@ TEST_CASE("End day updates all plots consistently") {
 }
 
 // BUNNY FEATURE TESTS
-// TEST_CASE("Bunny eats a crop when it lands on it") {
-//     Player player;
-//     Farm farm(3, 3, &player, true); // bunnies enabled
-//
-//     // Force spawn bunny manually
-//     farm.maybe_spawn_bunny();
-//     REQUIRE(farm.day() == 1);
-//
-//     // Move bunny to a known location (center)
-//     REQUIRE(farm.day() == 1);
-//     REQUIRE(farm.day() == 1);
-//
-//     // Manually place bunny at (1,1)
-//     farm.maybe_spawn_bunny();
-//     farm.bunny = new Bunny(1, 1);
-//
-//     // Plant carrot where bunny is
-//     farm.plant(1, 1, new Carrot());
-//     REQUIRE(farm.get_symbol(1, 1) == "R"); // bunny overlays plant
-//
-//     farm.end_day(); // bunny should eat plant
-//     REQUIRE(farm.get_symbol(1, 1) == "R"); // bunny still there
-//     player.move_right(farm.number_of_columns());
-//     player.move_down(farm.number_of_rows());
-//     REQUIRE(farm.get_symbol(1, 1) == "."); // soil left behind after eating
-// }
-//
-//
-// TEST_CASE("Bunny becomes scared when player stands next to it") {
-//     Player player;
-//     Farm farm(3, 3, &player, true);
-//
-//     // Place bunny manually at (1,1)
-//     farm.bunny = new Bunny(1, 1);
-//
-//     // Player moves next to bunny (1,0)
-//     player.move_down(farm.number_of_rows());
-//
-//     farm.end_day(); // triggers fear logic
-//
-//     REQUIRE(farm.bunny->is_scared() == true);
-// }
-//
-//
-// TEST_CASE("Scared bunny runs away from player") {
-//     Player player;
-//     Farm farm(5, 5, &player, true);
-//
-//     // Place bunny at center and player next to it
-//     farm.bunny = new Bunny(2, 2);
-//     player.move_down(farm.number_of_rows()); // player (1,0) → (2,0)
-//
-//     // Trigger fear on end_day
-//     farm.end_day();
-//     REQUIRE(farm.bunny->is_scared() == false); // should calm after running
-//
-//     // After running, bunny should NOT still be near player
-//     int br = farm.bunny->row();
-//     int bc = farm.bunny->column();
-//     REQUIRE_FALSE( (br == 2 && bc == 1) || (br == 2 && bc == 3) || (br == 1 && bc == 2) || (br == 3 && bc == 2) );
-// }
-//
-//
-// TEST_CASE("Bunny disappears when running off the map") {
-//     Player player;
-//     Farm farm(3, 3, &player, true);
-//
-//     // Place bunny near border
-//     farm.bunny = new Bunny(0, 0);
-//
-//     // Player stands next to bunny so it panics and runs off the map
-//     player.move_down(farm.number_of_rows()); // player moves to (1,0)
-//     farm.end_day(); // scared bunny moves away off grid
-//
-//     // If bunny left the map, it should be deleted
-//     REQUIRE(farm.get_symbol(0, 0) == "@"); // no bunny here anymore
-// }
+// Farm w/ enable_bunnies = true
+Farm* make_farm(Player* p, bool enable_bunnies = true) {
+    return new Farm(5, 5, p, enable_bunnies);
+}
+
+TEST_CASE("Bunny can be manually placed using set_bunny()") {
+    Player p;
+    Farm farm(5,5,&p,true);
+
+    Bunny* b = new Bunny(2,3);
+    farm.set_bunny(b);
+
+    REQUIRE(farm.get_bunny() != nullptr);
+    REQUIRE(farm.get_bunny()->row() == 2);
+    REQUIRE(farm.get_bunny()->column() == 3);
+}
+
+TEST_CASE("Bunny eats plants at start of day") {
+    Player p;
+    Farm farm(5,5,&p,true);
+
+    // place carrot at (2,2)
+    farm.plant(2,2,new Carrot());
+    REQUIRE(farm.get_symbol(2,2) == "x"); //start as seedling "x"
+
+    // place bunny on top
+    farm.set_bunny(new Bunny(2,2));
+
+    farm.end_day(); // bunny eats before moving
+
+    REQUIRE(farm.get_symbol(2,2) == "."); // soil
+}
+
+TEST_CASE("Bunny gets scared when player moves next to it") {
+    Player p;
+    Farm farm(5,5,&p,true);
+
+    farm.set_bunny(new Bunny(2,2));
+
+    // player moves to (1,2) which is directly above bunny
+    p.move_down(5);  // now at (1,0)
+    p.move_right(5); // now at (1,1)
+    p.move_right(5); // now at (1,2)
+
+    farm.bunny_check_fear();
+
+    REQUIRE(farm.get_bunny()->is_scared() == true);
+}
+
+TEST_CASE("Scared bunny runs 4 squares away from player") {
+    Player p;
+    Farm farm(10,10,&p,true);
+
+    // player near bunny
+    p.move_down(5);     // (1,0)
+    p.move_right(5);    // (1,1)
+    p.move_right(5);    // (1,2)
+
+    farm.set_bunny(new Bunny(2,2)); // directly below player
+
+    farm.bunny_check_fear(); // becomes scared
+    REQUIRE(farm.get_bunny()->is_scared() == true);
+
+    farm.bunny_move(); // bunny should run 4 squares DOWN
+
+    Bunny* b = farm.get_bunny();
+    REQUIRE(b != nullptr);
+    REQUIRE(b->row() == 6); // 2 + 4
+    REQUIRE(b->column() == 2);
+}
+
+TEST_CASE("Bunny disappears when it runs off the map") {
+    Player p;
+    Farm farm(5,5,&p,true);
+
+    // Put bunny near top edge so running away sends it off map
+    farm.set_bunny(new Bunny(0,2));
+
+    // place player just above bunny (out of bounds but still triggers logic)
+    // simulate fear manually
+    farm.get_bunny()->scare();
+
+    farm.bunny_move(); // bunny tries to move up 4 and exits map
+
+    REQUIRE(farm.get_bunny() == nullptr);
+}
+
+TEST_CASE("Bunny normal movement moves 1 square within map") {
+    Player p;
+    Farm farm(5,5,&p,true);
+
+    farm.set_bunny(new Bunny(2,2));
+
+    // Prevent scared movement
+    REQUIRE_FALSE(farm.get_bunny()->is_scared());
+
+    farm.bunny_move();
+
+    Bunny* b = farm.get_bunny();
+    REQUIRE(b != nullptr);
+
+    // Bunny must only move 1 tile
+    int dist = abs(b->row() - 2) + abs(b->column() - 2);
+    REQUIRE(dist == 1);
+}
+
+TEST_CASE("Bunny never moves onto the player") {
+    Player p;
+    Farm farm(5,5,&p,true);
+
+    p.move_right(5);  // player → (0,1)
+
+    farm.set_bunny(new Bunny(0,2)); // bunny next to player
+
+    // bunny normal movement may try to move left onto player (0,1)
+    for (int i = 0; i < 20; i++)
+        farm.bunny_move();
+
+    REQUIRE(!(farm.get_bunny() &&
+              farm.get_bunny()->row() == p.row() &&
+              farm.get_bunny()->column() == p.column()));
+}
